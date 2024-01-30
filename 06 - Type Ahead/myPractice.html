@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <form class="search-form">
+      <input type="text" class="search" placeholder="City or State" />
+      <ul class="suggestions">
+        <li>Filter for a city</li>
+        <li>or a state</li>
+      </ul>
+    </form>
+    <script>
+      let citiesArray = [];
+
+      const endpoint =
+        "https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json";
+      fetch(endpoint)
+        .then((blob) => blob.json())
+        .then((data) => citiesArray.push(...data));
+      function findMatches(wordsToMatch, citiesArray) {
+        return citiesArray.filter((place) => {
+          const regex = new RegExp(wordsToMatch, "gi");
+          return place.city.match(regex) || place.state.match(regex);
+        });
+      }
+      function displayMatches() {
+        const matchArray = findMatches(this.value, citiesArray);
+
+        const html = matchArray
+          .map((place) => {
+            const regex = new RegExp(this.value, "gi");
+            const cityName = place.city.replace(
+              regex,
+              `<span class="hl">${this.value}</span>`
+            );
+            const stateName = place.state.replace(
+              regex,
+              `<span class="hl">${this.value}</span>`
+            );
+            return `
+            <li>
+              <span class="name">${cityName},${stateName}</span>  
+              <span class="population">${place.population}</span>
+              
+            </li>`;
+          })
+          .join("");
+        suggestions.innerHTML = html;
+        // console.log(matchArray);
+      }
+      const searchInput = document.querySelector(".search");
+      const suggestions = document.querySelector(".suggestions");
+
+      searchInput.addEventListener("change", displayMatches);
+      searchInput.addEventListener("keyup", displayMatches);
+    </script>
+  </body>
+</html>
+<!-- what we have to do is enter a three letters then all the letters which match the city name will come in the array
+what we have to do is we have to push the cities into the json format so that cities list we can search the city by entering the three letters of the city -->
+<!-- In this we are using a regular expression to find the match of the city to match a expression 
+regular expression is 
+const regex=new RegExp("abc")// it means that /abc/ it will find the word where the sequence of abc matches
+/abc/gi
+g: Global flag, which means that the pattern will be applied globally to the entire input string, rather than stopping after the first match.
+i: Case-insensitive flag, which means that the matching process will be case-insensitive, so it will match "abc," "AbC," "ABC," and so on.
+ -->
+<!-- task left -->
+<!-- 1.to concat the city and state and display it in the array -->
