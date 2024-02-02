@@ -97,6 +97,36 @@
   </div>
 
 <script>
+  //task is to select one item and select last item then
+// all the checkboxes between them gets checked
+let lastChecked;
+let items = document.querySelectorAll('.item');
+let checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]')
+console.log("items", items)
+console.log("checkboxes", checkboxes)
+//challenges to get the checkbox id when it gets clicked
+function handleCheck(e) {
+  // console.log(e)
+  ////check if the shift key is pressed then allthe itemss are checkedstarting from 1dst to last
+  let inBetween = false;
+  if (e.shiftKey && this.checked) {
+    checkboxes.forEach(checkbox => {
+      console.log(checkbox)
+      if (checkbox === this || checkbox === lastChecked) {
+        inBetween = !inBetween;
+        console.log('starting to check in between')
+      }
+      if (inBetween) {
+        checkbox.checked = true;
+      }
+    });
+  }
+  lastChecked = this;
+}
+let idChecked = []
+checkboxes.forEach(checkbox => checkbox.addEventListener('click', handleCheck))
+// console.log("id checked", idChecked)
+
 </script>
 </body>
 </html>
