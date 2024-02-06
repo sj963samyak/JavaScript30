@@ -58,6 +58,61 @@
         if (callNow) func.apply(context, args);
       };
     }
+  function debounce(func, wait = 20, immediate = true) {
+  var timeout;
+  return function() {
+    var context = this, args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+};
+
+const sliderImages = document.querySelectorAll('.slide-in');
+function checkSlide(e) {
+  let distanceY = window.scrollY;
+  // let distanceX=window.scrollX;
+
+  let windowHeight = window.innerHeight
+  // console.log(distanceY)
+  // console.log(distanceY)
+  // console.log(windowHeight)
+  let slideInAt = window.scrollY + window.innerHeight
+
+  // console.log(`The height of the page is ${windowHeight} and the scrollY distance is ${distanceY} and the height we are at that we have to scroll is ${slideInAt}`)
+  sliderImages.forEach(sliderimage => {
+    let slideInAt = window.scrollY + window.innerHeight
+    //halfway thrugh the image
+    let transWillTakeAtHeight = slideInAt - sliderimage.height / 2
+    //now to calculate the image height at which the image will disappear
+    let bottomHeight = sliderimage.offsetTop + sliderimage.height
+    const isHalfShown=slideInAt>sliderimage.offsetTop
+    const isImageCrossed=bottomHeight>sliderimage.offsetBottom
+    const isNotScrolledPast = window.scrollY<bottomHeight
+    if(isHalfShown && isNotScrolledPast){
+      sliderimage.classList.add('active')
+    }
+    else{
+      sliderimage.classList.remove('active')
+    }
+    })
+  
+}
+
+
+window.addEventListener('scroll', debounce(checkSlide));
+//debounce function is used to validate the animation that events such that if there are many events then there will be some gap between the two events 
+// 1.when we have scrolled half the screen then animation will start
+//2.if we scroll down a certain point then event will occur
+//3.Loop every single image when the scroll point crosses that the opacity wll become 1 and transationX will become to 0 percent 
+// challenge is that you have to hide the images
+
+
 
   </script>
 
